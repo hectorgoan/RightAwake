@@ -9,6 +9,7 @@ import SwiftUI
 import AppKit
 
 class AppDelegate: NSObject, NSApplicationDelegate {
+    @AppStorage("isAwake") private var isAwake : Bool = false
     
     var rightMouseDownMonitor: Any?
     var rightMouseUpMonitor: Any?
@@ -17,25 +18,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(_ notification: Notification) {
                 
-        
-        // Monitor right mouse down
+        // Global Monitor right mouse down
         rightMouseDownMonitor = NSEvent.addGlobalMonitorForEvents(matching: .rightMouseDown) { event in
-            UserDefaults.standard.set(true, forKey: "isAwake");
+            self.switchAwakeStatus(for: true)
         }
 
-        // Monitor right mouse up
+        // Global Monitor right mouse up
         rightMouseUpMonitor = NSEvent.addGlobalMonitorForEvents(matching: .rightMouseUp) { event in
-            UserDefaults.standard.set(true, forKey: "isAwake");
+            self.switchAwakeStatus(for: true)
+            
         }
 
-        // Monitor left mouse down
+        // Global Monitor left mouse down
         leftMouseDownMonitor = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseDown) { event in
-            UserDefaults.standard.set(false, forKey: "isAwake");
+            self.switchAwakeStatus(for: false)
         }
 
-        // Monitor left mouse up
+        // Global Monitor left mouse up
         leftMouseUpMonitor = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp) { event in
-            UserDefaults.standard.set(false, forKey: "isAwake");
+            self.switchAwakeStatus(for: false)
+        }
+    }
+    
+    func switchAwakeStatus(for desiredStatus: Bool) {
+        if (isAwake != desiredStatus) {
+            UserDefaults.standard.set(desiredStatus, forKey: "isAwake");
         }
     }
 
@@ -69,8 +76,8 @@ struct AppMenu: View {
     }
 
     var body: some View {
-        Button(action: activateDetection, label: { Text("Activate detection") })
-        Button(action: deActivateDetection, label: { Text("Deactivate detection") })
+        Button(action: activateDetection, label: { Text("Start detecting") })
+        Button(action: deActivateDetection, label: { Text("Stop detecting") })
         
         Divider()
 
