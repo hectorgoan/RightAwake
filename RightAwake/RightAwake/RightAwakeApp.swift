@@ -20,27 +20,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 
         // Global Monitor right mouse down
         rightMouseDownMonitor = NSEvent.addGlobalMonitorForEvents(matching: .rightMouseDown) { event in
-            self.switchAwakeStatus(for: true)
+            self.switchAwakeStatus(to: true)
         }
 
         // Global Monitor right mouse up
         rightMouseUpMonitor = NSEvent.addGlobalMonitorForEvents(matching: .rightMouseUp) { event in
-            self.switchAwakeStatus(for: true)
-            
+            self.switchAwakeStatus(to: true)
         }
 
         // Global Monitor left mouse down
         leftMouseDownMonitor = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseDown) { event in
-            self.switchAwakeStatus(for: false)
+            self.switchAwakeStatus(to: false)
         }
 
         // Global Monitor left mouse up
         leftMouseUpMonitor = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp) { event in
-            self.switchAwakeStatus(for: false)
+            self.switchAwakeStatus(to: false)
         }
     }
     
-    func switchAwakeStatus(for desiredStatus: Bool) {
+    func switchAwakeStatus(to desiredStatus: Bool) {
         if (isAwake != desiredStatus) {
             UserDefaults.standard.set(desiredStatus, forKey: "isAwake");
         }
